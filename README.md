@@ -18,7 +18,7 @@ Open Calculator 不是传统意义上的“一个计算器页面”，而是一�
 
 | 能力                                           | 状态                                                      |
 | ---------------------------------------------- | --------------------------------------------------------- |
-| 类 Excel 表格（公式 / 格式 / 多工作表）        | ✅ 基于 Univer 1.6                                        |
+| 类 Excel 表格（公式 / 格式 / 多工作表）        | ✅ 基于 Univer 1.5.2                                      |
 | 工作簿自动保存 / 加载                          | ✅ 前端 → Rust 后端（内存存储，重启后重置）               |
 | Rust HTTP API（health / meta / workbooks）     | ✅ Axum 0.8 + Tokio                                       |
 | Tauri 桌面壳（开发加载 Web，发布内嵌 sidecar） | ✅ 骨架                                                   |
@@ -31,7 +31,7 @@ Open Calculator 不是传统意义上的“一个计算器页面”，而是一�
 | 层       | 选型                                                             | 说明                                                     |
 | -------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
 | 前端     | React 19 + TypeScript 5.9 + Vite 8                               | 应用外壳、AI 面板、状态管理                              |
-| 表格引擎 | [Univer](https://univer.ai) 1.6（Apache-2.0）                    | Canvas 渲染的 Excel 兼容网格、公式引擎、插件体系         |
+| 表格引擎 | [Univer](https://univer.ai) 1.5.2（Apache-2.0）                  | Canvas 渲染的 Excel 兼容网格、公式引擎、插件体系         |
 | 后端     | Rust 2024 + [Axum](https://github.com/tokio-rs/axum) 0.8 + Tokio | 本地 HTTP API、未来的工作簿持久化 / AI 代理 / 插件运行时 |
 | 桌面     | [Tauri 2](https://tauri.app)                                     | 复用系统 WebView，Rust 侧内嵌后端 sidecar                |
 | 工程     | pnpm workspace + Cargo workspace                                 | 前后端同仓、独立依赖与构建                               |

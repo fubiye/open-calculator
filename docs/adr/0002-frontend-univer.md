@@ -10,7 +10,7 @@
 ## 决策
 
 - 应用外壳：React 19 + TypeScript 5.9 + Vite 8。选择 Vite 而非 Next.js：产品是本地优先的单页工具，不需要 SSR/RSC，桌面打包也更简单。
-- 表格界面：**Univer 1.6**（`@univerjs/presets` + `@univerjs/preset-sheets-core`，Apache-2.0），通过 `createUniver` + `UniverSheetsCorePreset` 集成；工作簿快照用 `fWorkbook.save()` 序列化、`univerAPI.createWorkbook()` 装载。
+- 表格界面：**Univer 1.5.2**（`@univerjs/presets` + `@univerjs/preset-sheets-core`，Apache-2.0），通过 `createUniver` + `UniverSheetsCorePreset` 集成；工作簿快照用 `fWorkbook.save()` 序列化、`univerAPI.createWorkbook()` 装载。
 - 状态管理：当前只有应用级状态，使用 React 内置 state；不引入 Redux/Zustand，等出现跨面板复杂状态再评估。
 - 样式：手写 CSS + CSS 变量，不引入 Tailwind，避免与 Univer 自带样式体系叠加复杂度。
 

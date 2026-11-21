@@ -35,12 +35,12 @@ flowchart LR
 
 ## 3. 代码组成
 
-| 目录            | 职责                                                               | 关键依赖                     |
-| --------------- | ------------------------------------------------------------------ | ---------------------------- |
-| `apps/web`      | 应用外壳、表格界面、AI 面板、API 客户端                            | React 19、Vite 8、Univer 1.6 |
-| `crates/server` | 本地 HTTP API、工作簿快照存储（当前内存）、CORS、tracing、优雅关闭 | Axum 0.8、Tokio、tower-http  |
-| `apps/desktop`  | 桌面打包；dev 复用 Vite dev server，release 内嵌后端二进制         | Tauri 2、tauri-plugin-shell  |
-| `docs`          | 架构、选型、ADR、路线图                                            | -                            |
+| 目录            | 职责                                                               | 关键依赖                       |
+| --------------- | ------------------------------------------------------------------ | ------------------------------ |
+| `apps/web`      | 应用外壳、表格界面、AI 面板、API 客户端                            | React 19、Vite 8、Univer 1.5.2 |
+| `crates/server` | 本地 HTTP API、工作簿快照存储（当前内存）、CORS、tracing、优雅关闭 | Axum 0.8、Tokio、tower-http    |
+| `apps/desktop`  | 桌面打包；dev 复用 Vite dev server，release 内嵌后端二进制         | Tauri 2、tauri-plugin-shell    |
+| `docs`          | 架构、选型、ADR、路线图                                            | -                              |
 
 未来新增（不在当前范围）：`crates/calc-engine`（Rust 计算/插件运行时）、`crates/ai`（模型网关）、`packages/sdk`（前端插件 SDK）。
 

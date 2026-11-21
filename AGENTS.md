@@ -9,7 +9,7 @@ Open Calculator：开放、可扩展、AI 原生的计算器。以类 Excel 网�
 ## 2. 技术栈（版本以仓库配置为准）
 
 - 前端：React 19 + TypeScript 5.9 + Vite 8
-- 表格：Univer 1.6（`@univerjs/presets` + `@univerjs/preset-sheets-core`，Apache-2.0）
+- 表格：Univer 1.5.2（`@univerjs/presets` + `@univerjs/preset-sheets-core`，Apache-2.0）
 - 后端：Rust 2024 + Axum 0.8 + Tokio 1.54
 - 桌面：Tauri 2（sidecar 内嵌后端）
 - 工程：pnpm workspace + Cargo workspace；CI 见 `.github/workflows/ci.yml`

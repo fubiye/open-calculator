@@ -10,20 +10,20 @@
 
 ## 1. 决策摘要
 
-| 领域          | 选择                                                                  | 备选                                             | 核心理由                                                                           | 主要风险                                                                 |
-| ------------- | --------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| 前端框架      | React 19.3.1（MIT）                                                   | Vue 3、Svelte 5                                  | Univer 视图层基于 React 18，官方声明支持 18/19；生态与 AI UI 组件最多              | 无显著风险；Univer 对 16.9/17 仅「最小兼容」，本项目用 19 属正常路径     |
-| 构建          | Vite 8.3.8（MIT）+ TypeScript ~5.9.3                                  | Rspack、webpack 5                                | Univer 官方推荐 Vite/esbuild；当前仓库构建链路已跑通                               | TS 最新为 7.0.2（2026-07-08），项目落后两个大版本，升级需独立 spike      |
-| 表格引擎      | Univer 1.6.0（Apache-2.0）                                            | FortuneSheet、AG Grid、Handsontable、自研 Canvas | 开源核心自带公式引擎 + 命令/插件/DI/撤销体系，与「可扩展」目标最贴合               | 1.6.0 发布极新；XLSX 导入导出等属商业模块；包体积大                      |
-| 桌面壳        | Tauri 2.12.7 / CLI 2.12.6                                             | Electron、纯 PWA                                 | 体积小、Rust 侧可复用后端逻辑，sidecar 可打包本地 server（仓库已配 `externalBin`） | 三平台 webview 行为差异；签名/自动更新链路尚未落地                       |
-| HTTP 后端     | Axum 0.8.9 + Tokio 1.54.1（均 MIT）                                   | Actix Web 4.20、Poem 3.1                         | 与 tokio/hyper/tower 同栈，中间件生态成熟，学习与维护成本低                        | 当前功能不构成性能瓶颈，性能差异不构成选型理由                           |
-| 存储          | 内存 Store → SQLite（sqlx 0.9.1 或 rusqlite 0.43.0）                  | Postgres、嵌入式 KV                              | 单机优先、零运维；`revision` 字段已在 API 中出现，天然适配快照版本化               | 迁移期双写/兼容；SQLite 并发写入需串行化                                 |
-| 类型共享      | 现阶段手写 TS 接口（`apps/web/src/lib/api.ts`）                       | ts-rs 12、utoipa 6 + openapi-typescript          | 接口少时手写成本最低；后端已用 serde                                               | 手写易漂移；ts-rs 12.0.1 已近 10 个月无新版（待验证），utoipa 6 生态更新 |
-| 交互式计算    | Univer `engine-formula`（前端 TS）                                    | HyperFormula（AGPL）、自研                       | 与表格渲染同一数据模型，零序列化开销，支持 Worker 计算                             | 与 Rust 侧权威计算存在「双引擎口径」问题（第 5 节核心）                  |
-| 权威/批量计算 | formualizer 0.14.0（MIT OR Apache-2.0）— 先做 spike                   | umya-spreadsheet、calamine、LibreOffice 无头     | 纯 Rust、400+ 函数、增量重算、可注册自定义函数、WASM 友好                          | 0.14 版本迭代极快（月内 0.9→0.14），API 不稳、社区极新                   |
-| 插件沙箱      | 现在不做；下一步 wasmtime 51（Apache-2.0 WITH LLVM-exception）        | 进程隔离、Deno、JS 沙箱                          | 组件化调用、燃料/超时控制、formualizer 亦支持 wasmtime 插件                        | 集成成本高；WASI 能力边界需自行裁剪                                      |
-| AI 层         | 后端统一代理 + SSE；provider 抽象（OpenAI 兼容 / Anthropic / Ollama） | 前端直连模型                                     | key 不落前端；本地优先；可替换 provider                                            | 流式 + 工具调用状态机复杂度；隐私边界需产品化说明                        |
-| 工程          | pnpm 12 workspace + Cargo workspace                                   | npm/yarn、Nx                                     | 两端依赖管理简单直接，符合 monorepo 现状                                           | 跨端任务编排（`concurrently`）在 CI 上需注意信号处理                     |
+| 领域          | 选择                                                                  | 备选                                             | 核心理由                                                                           | 主要风险                                                                                            |
+| ------------- | --------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 前端框架      | React 19.3.1（MIT）                                                   | Vue 3、Svelte 5                                  | Univer 视图层基于 React 18，官方声明支持 18/19；生态与 AI UI 组件最多              | 无显著风险；Univer 对 16.9/17 仅「最小兼容」，本项目用 19 属正常路径                                |
+| 构建          | Vite 8.3.8（MIT）+ TypeScript ~5.9.3                                  | Rspack、webpack 5                                | Univer 官方推荐 Vite/esbuild；当前仓库构建链路已跑通                               | TS 最新为 7.0.2（2026-07-08），项目落后两个大版本，升级需独立 spike                                 |
+| 表格引擎      | Univer 1.5.2（Apache-2.0）                                            | FortuneSheet、AG Grid、Handsontable、自研 Canvas | 开源核心自带公式引擎 + 命令/插件/DI/撤销体系，与「可扩展」目标最贴合               | 最新 1.6.0 发布不足 24h 被 pnpm 供应链策略拒绝；项目锁定 1.5.2；XLSX 导入导出等属商业模块；包体积大 |
+| 桌面壳        | Tauri 2.12.7 / CLI 2.12.6                                             | Electron、纯 PWA                                 | 体积小、Rust 侧可复用后端逻辑，sidecar 可打包本地 server（仓库已配 `externalBin`） | 三平台 webview 行为差异；签名/自动更新链路尚未落地                                                  |
+| HTTP 后端     | Axum 0.8.9 + Tokio 1.54.1（均 MIT）                                   | Actix Web 4.20、Poem 3.1                         | 与 tokio/hyper/tower 同栈，中间件生态成熟，学习与维护成本低                        | 当前功能不构成性能瓶颈，性能差异不构成选型理由                                                      |
+| 存储          | 内存 Store → SQLite（sqlx 0.9.1 或 rusqlite 0.43.0）                  | Postgres、嵌入式 KV                              | 单机优先、零运维；`revision` 字段已在 API 中出现，天然适配快照版本化               | 迁移期双写/兼容；SQLite 并发写入需串行化                                                            |
+| 类型共享      | 现阶段手写 TS 接口（`apps/web/src/lib/api.ts`）                       | ts-rs 12、utoipa 6 + openapi-typescript          | 接口少时手写成本最低；后端已用 serde                                               | 手写易漂移；ts-rs 12.0.1 已近 10 个月无新版（待验证），utoipa 6 生态更新                            |
+| 交互式计算    | Univer `engine-formula`（前端 TS）                                    | HyperFormula（AGPL）、自研                       | 与表格渲染同一数据模型，零序列化开销，支持 Worker 计算                             | 与 Rust 侧权威计算存在「双引擎口径」问题（第 5 节核心）                                             |
+| 权威/批量计算 | formualizer 0.14.0（MIT OR Apache-2.0）— 先做 spike                   | umya-spreadsheet、calamine、LibreOffice 无头     | 纯 Rust、400+ 函数、增量重算、可注册自定义函数、WASM 友好                          | 0.14 版本迭代极快（月内 0.9→0.14），API 不稳、社区极新                                              |
+| 插件沙箱      | 现在不做；下一步 wasmtime 51（Apache-2.0 WITH LLVM-exception）        | 进程隔离、Deno、JS 沙箱                          | 组件化调用、燃料/超时控制、formualizer 亦支持 wasmtime 插件                        | 集成成本高；WASI 能力边界需自行裁剪                                                                 |
+| AI 层         | 后端统一代理 + SSE；provider 抽象（OpenAI 兼容 / Anthropic / Ollama） | 前端直连模型                                     | key 不落前端；本地优先；可替换 provider                                            | 流式 + 工具调用状态机复杂度；隐私边界需产品化说明                                                   |
+| 工程          | pnpm 12 workspace + Cargo workspace                                   | npm/yarn、Nx                                     | 两端依赖管理简单直接，符合 monorepo 现状                                           | 跨端任务编排（`concurrently`）在 CI 上需注意信号处理                                                |
 
 ---
 
@@ -34,10 +34,10 @@
 前端已按 Univer 初始化，不是「待选」状态：
 
 - `apps/web/src/components/Spreadsheet.tsx`：`createUniver` + `UniverSheetsCorePreset`（preset 模式），挂载后创建/恢复 workbook，命令订阅后 800ms 防抖自动保存。
-- `apps/web/package.json`：`@univerjs/presets@^1.6.0`、`@univerjs/preset-sheets-core@^1.6.0`。
-- 依赖事实：两包均为 **Apache-2.0**，npm 最新 **1.6.0**，发布于 **2026-11-21**（1.5.0 为 2026-11-14）。`preset-sheets-core` 的 peer 依赖为 `react ^16.9 || ^17 || ^18 || ^19`、`react-dom` 同、`rxjs >=7`。
+- `apps/web/package.json`（锁定精确版本）：`@univerjs/presets@1.5.2`、`@univerjs/preset-sheets-core@1.5.2`。
+- 依赖事实：两包均为 **Apache-2.0**。npm 最新为 **1.6.0**（2026-11-21 发布），但 pnpm 12 默认 `minimumReleaseAge` 供应链策略拒绝发布不足 24h 的版本，且 1.6.0 尚无可观察的稳定期；因此项目锁定 **1.5.2**（2026-11-16 发布），待 1.6.0 放量后再同步升级全部 `@univerjs/*`。`preset-sheets-core` 的 peer 依赖为 `react ^16.9 || ^17 || ^18 || ^19`、`react-dom` 同、`rxjs >=7`。
 - 官方 README：Univer 视图层基于 React 18，**支持 React 18 与 19**；浏览器基线 Chrome/Edge ≥88、Firefox ≥90、Safari ≥14.1；依赖 `Intl.Segmenter`（不支持时需 polyfill）。
-- 文档站当前标注版本 **v1.5.2**，落后于包版本 1.6.0（文档滞后，属正常但需注意 API 以实际类型为准）。
+- 文档站当前标注版本 **v1.5.2**，与项目锁定版本一致（最新包 1.6.0 的文档尚未跟进）。
 
 ### 2.2 为什么保留 Univer（论证，不是重新推荐）
 
@@ -45,11 +45,11 @@
 2. **它提供的正是本项目最贵的那部分**：Canvas 渲染 + 公式引擎 + 选区/剪贴板/格式/撤销，自研等价物是月级起步。
 3. **扩展模型与「可扩展」目标同构**：三层插件（core → product → feature）、`DependentOn` 声明依赖、DI 容器、Command/Mutation/Operation 三分、`IUndoRedoService` 统一撤销。自定义函数是官方一等能力（第 7 节）。
 4. **Facade API 面向外部操作**，`FWorkbook`/`FWorksheet`/`FRange` 与 `univerAPI.Event`/`Enum` 是稳定的应用层入口——AI 层与后续插件都应只走 Facade，不碰内部 service。
-5. **React 19 官方支持**已在 1.6.0 的 peer 范围内，不需要 hack。
+5. **React 19 官方支持**已在 1.5.2 的 peer 范围内（1.6.0 相同），不需要 hack。
 
 ### 2.3 横向对比
 
-| 维度                 | Univer 1.6.0                                                                                           | FortuneSheet 1.0.4                                          | Luckysheet 2.1.13                                                                             | Handsontable 18.1.3                                                           | AG Grid 36.3.0                           | 自研 Canvas 网格 |
+| 维度                 | Univer 1.5.2                                                                                           | FortuneSheet 1.0.4                                          | Luckysheet 2.1.13                                                                             | Handsontable 18.1.3                                                           | AG Grid 36.3.0                           | 自研 Canvas 网格 |
 | -------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------- | ---------------- |
 | 许可证               | Apache-2.0（核心）                                                                                     | MIT                                                         | MIT                                                                                           | 非标准：`SEE LICENSE IN LICENSE.txt`（非商业免费 + 商业授权，具体条款待验证） | 社区版 MIT（企业版商业）                 | 自有             |
 | 公式引擎             | 内置（TS），支持 Worker                                                                                | 无（需外挂）                                                | 内置，老旧                                                                                    | 无（需 HyperFormula 等）                                                      | 无                                       | 自研             |
@@ -65,13 +65,13 @@
 
 ### 2.4 风险与切换成本
 
-| 风险     | 说明                                                                                                                  | 缓解                                                                                                      |
-| -------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| 版本极新 | 1.6.0 发布于事实快照当天；`^1.6.0` 允许 1.x 漂移，而 Univer 要求所有 `@univerjs/*` **同版本**，混版会出现运行时不匹配 | 锁定精确版本；升级时全量 `@univerjs/*` 同步升级并跑冒烟测试                                               |
-| 开源边界 | 协作、图表、透视表、**XLSX 导入导出**、Server SDK、AI SDK 均为商业/独立分发；README 与 pricing 页为准                 | 产品层面把「导入/导出 Excel」明确为后续商业决策点；自研导入用 `calamine`（第 5 节）                       |
-| 体积     | Canvas + 多 locale + 多 CSS；当前 `dist/assets` 已含大量 locale chunk                                                 | 按需 locale、路由级/懒加载、构建产物预算（spike 项）                                                      |
-| 文档滞后 | 文档站 v1.5.2 vs 包 1.6.0                                                                                             | API 以 `node_modules` 类型声明为准，重要 API 写测试固化                                                   |
-| 锁定成本 | 数据模型是 Univer 的 `IWorkbookData` 快照                                                                             | **已在做**：后端只存不透明 snapshot + revision，前后端解耦；再加一层 `SpreadsheetHost` 接口（不必现在写） |
+| 风险     | 说明                                                                                                                              | 缓解                                                                                                      |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 版本极新 | 1.6.0 于 2026-11-21 发布，发布不足 24h 即被 pnpm 供应链策略拒绝；Univer 要求所有 `@univerjs/*` **同版本**，混版会出现运行时不匹配 | 锁定精确版本 1.5.2；升级时全量 `@univerjs/*` 同步升级并跑冒烟测试                                         |
+| 开源边界 | 协作、图表、透视表、**XLSX 导入导出**、Server SDK、AI SDK 均为商业/独立分发；README 与 pricing 页为准                             | 产品层面把「导入/导出 Excel」明确为后续商业决策点；自研导入用 `calamine`（第 5 节）                       |
+| 体积     | Canvas + 多 locale + 多 CSS；当前 `dist/assets` 已含大量 locale chunk                                                             | 按需 locale、路由级/懒加载、构建产物预算（spike 项）                                                      |
+| 文档滞后 | 文档站与锁定版本一致，但最新包 1.6.0 的文档尚未跟进                                                                               | API 以 `node_modules` 类型声明为准，重要 API 写测试固化                                                   |
+| 锁定成本 | 数据模型是 Univer 的 `IWorkbookData` 快照                                                                                         | **已在做**：后端只存不透明 snapshot + revision，前后端解耦；再加一层 `SpreadsheetHost` 接口（不必现在写） |
 
 切换成本粗估（同等功能达成度下）：
 
@@ -182,7 +182,7 @@ L0 数据/引用模型  Univer IWorkbookData 快照；后端只存不透明 JSON
 设计原则：
 
 1. **单一写入者**：单元格值的权威来源恒为 L1 的编辑结果；L3 只能在「导入/重算」这类显式动作中产出新快照，且必须整体替换 + 记录 `engine:version`，不做隐式回填。
-2. **计算身份**：快照携带 `engine`（如 `univer@1.6.0` / `formualizer@0.14.0`），出现数值差异时可定位到引擎与版本。
+2. **计算身份**：快照携带 `engine`（如 `univer@1.5.2` / `formualizer@0.14.0`），出现数值差异时可定位到引擎与版本。
 3. **函数清单单一来源**：自定义函数名/签名/参数说明集中定义，L1 与 L3 的实现共用同一份清单与测试向量，禁止两边各写一份。
 
 ### 5.3 双引擎口径一致性
@@ -297,7 +297,7 @@ POST /api/v1/ai/chat  (SSE)
   "name": "Loan Functions",
   "version": "0.1.0",
   "apiVersion": "0.1",
-  "engines": { "univer": "1.6.x", "openCalculator": ">=0.1.0 <0.2.0" },
+  "engines": { "univer": "1.5.x", "openCalculator": ">=0.1.0 <0.2.0" },
   "kind": "function",
   "entry": { "runtime": "wasm", "module": "plugin.wasm", "functions": ["LOAN_PMT"] },
   "permissions": ["cells.read", "ai.invoke"],
@@ -320,17 +320,17 @@ POST /api/v1/ai/chat  (SSE)
 
 ## 8. 风险清单与验证计划（Spike）
 
-| #   | 风险                                                              | 影响            | 验证方式（spike）                                                                                                                                | 完成判据                                |
-| --- | ----------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
-| S1  | Univer 在 macOS WKWebView（Tauri）中滚动/编辑性能与 Chromium 差异 | 桌面端体验      | 在 `apps/desktop` 打包后跑 1 万行 × 30 列工作表，记录 FPS 与输入延迟                                                                             | 输入到渲染 < 50ms，滚动无明显掉帧       |
-| S2  | Univer 版本升级破坏（1.6.0 极新、`@univerjs/*` 需同版本）         | 构建/运行时错误 | 锁定精确版本，写升级脚本 + 冒烟测试清单                                                                                                          | 升级流程可重复，冒烟全绿                |
-| S3  | 双引擎口径差异（Univer vs formualizer）                           | 数值不可信      | 20–50 条 golden fixtures（SUM/IF/VLOOKUP/日期/错误值/动态数组）两端对拍                                                                          | 差异项有明确归类（支持/不支持/精度）    |
-| S4  | formualizer 0.14 API 不稳                                         | 返工            | 单独 crate + trait 隔离，只做一个「读 xlsx → 重算 → 导出值」最小闭环                                                                             | 一周内可替换实现而不动业务层            |
-| S5  | 前端 bundle 体积（Univer + locale + CSS）                         | 首屏            | 当前实测：主 JS 6.9 MB（gzip 1.66 MB），`dist` 共 43 MB / 157 文件（含 locale chunk 与 sourcemap）；再用 `rollup-plugin-visualizer` 拆解，定预算 | 主 chunk 预算明确，超限有构建告警       |
-| S6  | 异步自定义函数阻塞重算                                            | 卡顿/超时雪崩   | 用假接口（延迟 500ms/3s/超时）验证 `AsyncObject` 行为与降级                                                                                      | 超时不出异常穿透，UI 可继续编辑         |
-| S7  | AI 工具调用误写单元格                                             | 数据损坏        | 所有写操作走「确认 + 服务端校验 + revision 冲突检测」                                                                                            | 冲突/越界/超限均被拒绝且有可读错误      |
-| S8  | sidecar 跨平台打包（`-$TARGET_TRIPLE`、CSP、端口）                | 发布            | 已有 `apps/desktop/scripts/build-sidecar.sh` 与 `build:sidecar` 脚本；补三平台 triple 与 CI 产物                                                 | 三平台双击可启动，前端能连上本地 server |
-| S9  | 后端存储从内存迁移 SQLite 的并发写                                | 数据丢失        | 并发 PUT 同一 workbook 的测试（revision CAS）                                                                                                    | 冲突返回 409，无静默覆盖                |
+| #   | 风险                                                                          | 影响            | 验证方式（spike）                                                                                                                                | 完成判据                                |
+| --- | ----------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| S1  | Univer 在 macOS WKWebView（Tauri）中滚动/编辑性能与 Chromium 差异             | 桌面端体验      | 在 `apps/desktop` 打包后跑 1 万行 × 30 列工作表，记录 FPS 与输入延迟                                                                             | 输入到渲染 < 50ms，滚动无明显掉帧       |
+| S2  | Univer 版本升级破坏（1.6.0 刚发布即被供应链策略拒绝、`@univerjs/*` 需同版本） | 构建/运行时错误 | 锁定精确版本，写升级脚本 + 冒烟测试清单                                                                                                          | 升级流程可重复，冒烟全绿                |
+| S3  | 双引擎口径差异（Univer vs formualizer）                                       | 数值不可信      | 20–50 条 golden fixtures（SUM/IF/VLOOKUP/日期/错误值/动态数组）两端对拍                                                                          | 差异项有明确归类（支持/不支持/精度）    |
+| S4  | formualizer 0.14 API 不稳                                                     | 返工            | 单独 crate + trait 隔离，只做一个「读 xlsx → 重算 → 导出值」最小闭环                                                                             | 一周内可替换实现而不动业务层            |
+| S5  | 前端 bundle 体积（Univer + locale + CSS）                                     | 首屏            | 当前实测：主 JS 6.9 MB（gzip 1.66 MB），`dist` 共 43 MB / 157 文件（含 locale chunk 与 sourcemap）；再用 `rollup-plugin-visualizer` 拆解，定预算 | 主 chunk 预算明确，超限有构建告警       |
+| S6  | 异步自定义函数阻塞重算                                                        | 卡顿/超时雪崩   | 用假接口（延迟 500ms/3s/超时）验证 `AsyncObject` 行为与降级                                                                                      | 超时不出异常穿透，UI 可继续编辑         |
+| S7  | AI 工具调用误写单元格                                                         | 数据损坏        | 所有写操作走「确认 + 服务端校验 + revision 冲突检测」                                                                                            | 冲突/越界/超限均被拒绝且有可读错误      |
+| S8  | sidecar 跨平台打包（`-$TARGET_TRIPLE`、CSP、端口）                            | 发布            | 已有 `apps/desktop/scripts/build-sidecar.sh` 与 `build:sidecar` 脚本；补三平台 triple 与 CI 产物                                                 | 三平台双击可启动，前端能连上本地 server |
+| S9  | 后端存储从内存迁移 SQLite 的并发写                                            | 数据丢失        | 并发 PUT 同一 workbook 的测试（revision CAS）                                                                                                    | 冲突返回 409，无静默覆盖                |
 
 ---
 
@@ -351,7 +351,7 @@ POST /api/v1/ai/chat  (SSE)
 
 | #   | 条目                                                                  | 不确定点                                                               | 验证方法                                                       |
 | --- | --------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
-| 1   | Univer 1.6.0 实际 API 与文档 v1.5.2 的差异                            | 文档滞后                                                               | 以 `node_modules/@univerjs/*` 类型声明为准，关键调用补类型测试 |
+| 1   | Univer 1.5.2 实际 API 与文档的差异（1.6.0 升级待观察）                | 文档滞后                                                               | 以 `node_modules/@univerjs/*` 类型声明为准，关键调用补类型测试 |
 | 2   | Univer 开源核心的公式函数覆盖清单                                     | README 未列函数级清单                                                  | 从 `@univerjs/engine-formula` 导出表统计，与 Excel 对照        |
 | 3   | Univer XLSX 导入导出的商业授权与价格                                  | pricing 页未逐一核实                                                   | 查 `univer.ai/pricing/` 与 `univer.ai/compare/`，必要时询价    |
 | 4   | Handsontable 18.1.3 的许可条款细节                                    | npm 只写 `SEE LICENSE IN LICENSE.txt`                                  | 读仓库 LICENSE 文本，确认非商业/商业边界                       |
