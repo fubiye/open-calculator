@@ -1,0 +1,24 @@
+[package]
+name = "open-calculator-desktop"
+version = "0.1.0"
+description = "Open Calculator 桌面端（Tauri 2 壳）"
+edition = "2024"
+rust-version = "1.90"
+license = "MIT"
+authors = ["Fu, Biye"]
+repository = "https://github.com/fubiye/open-calculator"
+publish = false
+
+# 该 crate 独立于仓库根的 Cargo workspace（根 Cargo.toml 已 exclude 本目录），
+# 因此可以按桌面端自己的依赖节奏升级 Tauri。
+[lib]
+name = "open_calculator_desktop_lib"
+
+[build-dependencies]
+tauri-build = { version = "2.7", features = [] }
+
+[dependencies]
+tauri = { version = "2.12", features = [] }
+tauri-plugin-shell = "2.6"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
