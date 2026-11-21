@@ -1,6 +1,0 @@
-packages:
-  - apps/*
-
-# Univer 的传递依赖 protobufjs 需要执行安装脚本；其余依赖保持 pnpm 的安全默认值。
-allowBuilds:
-  protobufjs: true

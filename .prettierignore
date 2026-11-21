@@ -2,5 +2,7 @@ node_modules
 dist
 target
 pnpm-lock.yaml
-apps/desktop/src-tauri/gen
-apps/desktop/src-tauri/icons
+frontend/pnpm-lock.yaml
+backend/target
+frontend/apps/desktop/src-tauri/gen
+frontend/apps/desktop/src-tauri/icons
