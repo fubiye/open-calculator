@@ -39,6 +39,9 @@ Open Calculator 不是传统意义上的“一个计算器页面”，而是一�
 
 更完整的选型对比与理由见 [docs/architecture/tech-stack.md](docs/architecture/tech-stack.md)。
 
+> **工程原则**：性能、简洁、模块独立是本项目的硬约束，含可度量的性能预算与模块依赖规则，见 [docs/architecture/principles.md](docs/architecture/principles.md)。
+> 说明：当前 Univer 方案在“初始 JS / 内存占用”上明显超出预算，正在通过 spike 评估「自研轻量网格 + Rust/WASM 公式内核」替代，详见该文档 §6。
+
 ## 快速开始
 
 环境要求：Node.js ≥ 22.12、pnpm 12、Rust stable ≥ 1.85（本项目使用 1.100 验证）、macOS 需 Xcode Command Line Tools（Tauri 开发）。
@@ -109,6 +112,7 @@ open-calculator/
 
 ## 文档
 
+- [工程原则与性能预算](docs/architecture/principles.md)
 - [架构总览](docs/architecture/overview.md)
 - [技术选型与对比](docs/architecture/tech-stack.md)
 - [路线图](docs/roadmap.md)

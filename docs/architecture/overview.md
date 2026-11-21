@@ -2,7 +2,7 @@
 
 - 状态：v0.1.0 骨架
 - 最后更新：2026-11-21
-- 相关文档：[技术选型](tech-stack.md) · [ADR](../adr/)
+- 相关文档：[工程原则与性能预算](principles.md) · [技术选型](tech-stack.md) · [ADR](../adr/)
 
 ## 1. 产品定位
 
@@ -139,6 +139,7 @@ MVP 顺序：解释公式 → 生成公式 → 基于选区写值 → 生成整�
 
 ## 10. 质量与工程基线
 
+- 性能预算、模块边界与接口规则以 [工程原则与性能预算](principles.md) 为准；每次交付须验证预算与依赖方向。
 - 前端：ESLint 10 + TypeScript strict + Vitest；后续补 Playwright 端到端（含公式重算与保存流程）。
 - 后端：`cargo fmt`、`clippy -D warnings`、集成测试（`tower::ServiceExt::oneshot`，不依赖端口）。
 - CI：GitHub Actions 双 job（Web / Rust），PR 必须全绿。

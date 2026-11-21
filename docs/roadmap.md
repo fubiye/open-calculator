@@ -14,6 +14,22 @@
 
 **验收**：`pnpm dev` 后编辑表格 → 公式重算 → 刷新页面数据仍在（后端未重启时）；`pnpm lint && pnpm test` 通过。
 
+## 阶段 0.5：性能与模块化基线（进行中）
+
+以 [工程原则与性能预算](architecture/principles.md) 为验收标准。
+
+- [x] release 构建启用 LTO + strip（后端二进制 3.2MB → 2.0MB）
+- [x] 基线测量：前端 1.72MB JS(gzip) / 42MB Heap；后端 2.0MB / 6.8MB RSS / 6.5ms 启动
+- [x] 工程原则、性能预算、模块地图与接口规则文档化
+- [ ] 快照版本信封（schemaVersion/engine/data）+ `expectedRevision` 冲突控制
+- [ ] 拆分 `crates/core` / `crates/storage`，瘦身 `crates/server`
+- [ ] 前端抽出 `SpreadsheetView` 接口（Univer 为第一个实现）
+- [ ] 表格引擎 spike（3–5 天时间盒）：自研 Canvas 网格 + Rust 公式内核 WASM
+- [ ] 若 spike 不达标，回退方案 A：保留 Univer，重设预算并开启 Worker/按需加载
+- [ ] `criterion` 基准 + bundle 体积门禁接入 CI
+
+**验收**：性能数据可复现；模块依赖方向符合 principles.md §4；表格引擎路线有数据支撑的决策记录（ADR）。
+
 ## 阶段 1：可用（v0.2.0）
 
 - [ ] SQLite 持久化（`sqlx`），工作簿列表 / 新建 / 重命名 / 删除
