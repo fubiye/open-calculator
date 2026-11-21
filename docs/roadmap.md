@@ -22,7 +22,10 @@
 - [x] 基线测量：前端 1.72MB JS(gzip) / 42MB Heap；后端 2.0MB / 6.8MB RSS / 6.5ms 启动
 - [x] 工程原则、性能预算、模块地图与接口规则文档化
 - [x] 后端架构设计定稿：分层/crate 边界、文件持久化与崩溃恢复、插件系统、本地文件数据源（ADR-0007~0010）
+- [x] 前端架构设计定稿：包拆分与边界强制、扩展体系、文件/视图/响应式/函数桥接/性能预算（ADR-0011、0012）
 - [ ] 后端实现：core/storage/server 拆分 + data-core/plugin-api/plugin-host；快照信封 + `expectedRevision` CAS
+- [ ] 前端拆包：contracts/api-client/workbook-univer/extensions/composition/blocks + 根级 boundaries lint
+- [ ] 前端扩展体系与内置块 dogfooding
 - [ ] 文件级持久化与崩溃恢复（原子写 + 检查点 + 数据快照缓存）
 - [ ] 官方插件：CSV/JSON 数据源 + 公式函数插件（金融/文本），配置开关启用
 - [ ] Univer 路线性能优化（Worker 公式计算、按需插件、locale 裁剪、面板懒加载），按实测校准前端预算
@@ -34,6 +37,7 @@
 
 - [ ] 文件级持久化与崩溃恢复（原子写 + 检查点；SQLite 是否引入待测量）
 - [ ] 本地 CSV/JSON 数据源 + 手动刷新 + 数据快照缓存
+- [ ] 前端文件 UX：多文件标签、保存/恢复、数据源面板、视图组合、响应式数据层
 - [ ] 文件列表 / 新建 / 打开 / 保存；多文件后端隔离（session）
 - [ ] 导入 / 导出 `.xlsx`（Rust `umya-spreadsheet` 或 Univer 插件，先定一条权威路径）
 - [ ] Playwright 端到端测试：输入公式、重算、刷新后保留

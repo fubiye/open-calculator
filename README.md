@@ -24,6 +24,7 @@ Open Calculator 不是传统意义上的“一个计算器页面”，而是一�
 | Tauri 桌面壳（开发加载 Web，发布内嵌 sidecar） | ✅ 骨架                                                                                              |
 | AI 助手                                        | 🚧 面板与接口设计就绪，模型通道待接入                                                                |
 | 自定义函数 / 插件                              | 🚧 v1 范围已定：官方数据源插件 + 公式函数插件，配置开关，见 [后端设计](docs/architecture/backend.md) |
+| 前端视图组合 / 插件体系                        | 🚧 设计完成：包拆分 + 边界强制 + 扩展系统，见 [前端设计](docs/architecture/frontend.md)              |
 | 文件级持久化 / 崩溃恢复                        | 🚧 设计已定（原子写 + 检查点），待实现                                                               |
 
 ## 技术栈
@@ -114,6 +115,7 @@ open-calculator/
 
 - [工程原则与性能预算](docs/architecture/principles.md)
 - [后端架构设计](docs/architecture/backend.md)
+- [前端架构设计](docs/architecture/frontend.md)
 - [架构总览](docs/architecture/overview.md)
 - [技术选型与对比](docs/architecture/tech-stack.md)
 - [路线图](docs/roadmap.md)

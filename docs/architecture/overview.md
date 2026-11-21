@@ -2,7 +2,7 @@
 
 - 状态：v0.1.0 骨架
 - 最后更新：2026-11-21
-- 相关文档：[工程原则与性能预算](principles.md) · [后端架构设计](backend.md) · [技术选型](tech-stack.md) · [ADR](../adr/)
+- 相关文档：[工程原则与性能预算](principles.md) · [后端架构设计](backend.md) · [前端架构设计](frontend.md) · [技术选型](tech-stack.md) · [ADR](../adr/)
 
 ## 1. 产品定位
 

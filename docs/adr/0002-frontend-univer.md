@@ -40,3 +40,9 @@
 | 自研 Canvas 网格          | 掌控力最强，但早期成本与风险过高；作为长期备选，仅在 Univer 成为硬约束时评估。 |
 
 详细对比与事实来源见 [技术选型文档](../architecture/tech-stack.md)。
+
+## 复核记录（2026-11-21）
+
+- 曾评估将应用框架改为 Vue，结论：**保留 React**。原因：Univer 的 UI 层内部依赖 React，Vue 只能替换应用外壳、无法移除 React，反而引入双框架与额外运行时。
+- 复核确认保留 Univer（Excel 级体验优先），接受 `1.72 MB JS(gzip) / 42 MB Heap` 的基线与相应性能预算（见 [前端设计 §10](../architecture/frontend.md)）。原 400 KB 初始 JS 目标不再适用于该路线。
+- 包拆分、边界与扩展体系见 [ADR-0011](0011-frontend-packages-boundaries.md)、[ADR-0012](0012-frontend-extension-system.md)。

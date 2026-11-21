@@ -76,6 +76,8 @@ pnpm dev        # web:5173 + server:8787
 - 性能预算是硬约束：见 [工程原则与性能预算](docs/architecture/principles.md)。改动前端表格/渲染、后端请求路径、模块依赖时，必须附前后测量数据（体积、启动、RSS、延迟至少一项）。
 - 前端初始包体积、后端 release 二进制大小不得超预算；超限需在 PR 中说明并获确认。
 - 新模块必须满足“可单独构建/测试/使用”：独立 README、独立测试命令、不跨模块 reach-in。
+- 前端按 ADR-0011 的 6 个 packages 边界开发，跨包只能走包入口；ESLint boundaries 实现后为强制检查。
+- 内置视图块必须通过扩展注册 API（ADR-0012），不允许绕过注册直连宿主。
 - 新增跨模块接口（HTTP、Repository、FormulaEngine、LlmProvider 等）先改接口设计文档/ADR，再实现。
 - 禁止为单个使用方引入通用抽象或新依赖；新增依赖需说明体积、许可证与维护状态。
 

@@ -8,7 +8,7 @@ Open Calculator：开放、可扩展、AI 原生的计算器。以类 Excel 网�
 
 ## 2. 工程原则（硬约束）
 
-1. **性能优先**：有可度量预算（前端初始 JS ≤400KB gzip、空闲 Heap ≤40MB；后端启动 ≤50ms、空闲 RSS ≤15MB 等），超预算需 ADR 说明并给出回收计划。
+1. **性能优先**：有可度量预算（前端初始 JS 硬上限 1.60MB gzip、空闲 Heap 60MB；后端启动 ≤50ms、空闲 RSS ≤15MB 等，详见 principles.md §3），超预算需 ADR 说明并给出回收计划。
 2. **简洁优先**：能删不增；抽象必须有第二个使用方；接口先设计后实现。
 3. **模块独立**：每个 crate/package 可单独构建、测试、使用；依赖方向单向无环。
 
@@ -74,6 +74,7 @@ pnpm --dir apps/desktop check
 - 表格引擎已定为 Univer（Excel 级体验优先）；v1 不做自研网格。
 - v1 后端插件只做官方插件（CSV/JSON 数据源 + 公式函数插件），配置开关启用；不做第三方 WASM、不做原生动态库。
 - 实时计算只在单个文件内传播；不做文件监控/轮询，数据源仅手动刷新。
+- 前端包拆分与扩展体系按 ADR-0011/0012 实现：6 个 packages + apps/web，边界由 ESLint boundaries 强制；新代码不得绕过包入口或扩展注册。
 - 前端不得直接持有模型 API key；AI 一律经 Rust 后端。
 - 不修改 `apps/desktop/src-tauri/binaries/`、`target/`、`node_modules/` 等生成物。
 
@@ -91,6 +92,7 @@ pnpm --dir apps/desktop check
 - [README](README.md)
 - [工程原则与性能预算](docs/architecture/principles.md)
 - [后端架构设计](docs/architecture/backend.md)
+- [前端架构设计](docs/architecture/frontend.md)
 - [架构总览](docs/architecture/overview.md)
 - [技术选型](docs/architecture/tech-stack.md)
 - [ADR](docs/adr/README.md)
