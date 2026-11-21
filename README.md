@@ -16,31 +16,31 @@ Open Calculator 不是传统意义上的“一个计算器页面”，而是一�
 
 ## 当前状态（v0.1.0 骨架）
 
-| 能力                                           | 状态                                                      |
-| ---------------------------------------------- | --------------------------------------------------------- |
-| 类 Excel 表格（公式 / 格式 / 多工作表）        | ✅ 基于 Univer 1.5.2                                      |
-| 工作簿自动保存 / 加载                          | ✅ 前端 → Rust 后端（内存存储，重启后重置）               |
-| Rust HTTP API（health / meta / workbooks）     | ✅ Axum 0.8 + Tokio                                       |
-| Tauri 桌面壳（开发加载 Web，发布内嵌 sidecar） | ✅ 骨架                                                   |
-| AI 助手                                        | 🚧 面板与接口设计就绪，模型通道待接入                     |
-| 自定义函数 / 插件                              | 🚧 架构设计见 [技术选型](docs/architecture/tech-stack.md) |
-| 持久化（SQLite）、导入导出 xlsx                | ⏳ 路线图阶段 1                                           |
+| 能力                                           | 状态                                                                                                 |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 类 Excel 表格（公式 / 格式 / 多工作表）        | ✅ 基于 Univer 1.5.2                                                                                 |
+| 工作簿自动保存 / 加载                          | ✅ 前端 → Rust 后端（内存存储，重启后重置）                                                          |
+| Rust HTTP API（health / meta / workbooks）     | ✅ Axum 0.8 + Tokio                                                                                  |
+| Tauri 桌面壳（开发加载 Web，发布内嵌 sidecar） | ✅ 骨架                                                                                              |
+| AI 助手                                        | 🚧 面板与接口设计就绪，模型通道待接入                                                                |
+| 自定义函数 / 插件                              | 🚧 v1 范围已定：官方数据源插件 + 公式函数插件，配置开关，见 [后端设计](docs/architecture/backend.md) |
+| 文件级持久化 / 崩溃恢复                        | 🚧 设计已定（原子写 + 检查点），待实现                                                               |
 
 ## 技术栈
 
-| 层       | 选型                                                             | 说明                                                     |
-| -------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
-| 前端     | React 19 + TypeScript 5.9 + Vite 8                               | 应用外壳、AI 面板、状态管理                              |
-| 表格引擎 | [Univer](https://univer.ai) 1.5.2（Apache-2.0）                  | Canvas 渲染的 Excel 兼容网格、公式引擎、插件体系         |
-| 后端     | Rust 2024 + [Axum](https://github.com/tokio-rs/axum) 0.8 + Tokio | 本地 HTTP API、未来的工作簿持久化 / AI 代理 / 插件运行时 |
-| 桌面     | [Tauri 2](https://tauri.app)                                     | 复用系统 WebView，Rust 侧内嵌后端 sidecar                |
-| 工程     | pnpm workspace + Cargo workspace                                 | 前后端同仓、独立依赖与构建                               |
-| CI       | GitHub Actions                                                   | 前端 lint/test/build + Rust fmt/clippy/test              |
+| 层       | 选型                                                             | 说明                                             |
+| -------- | ---------------------------------------------------------------- | ------------------------------------------------ |
+| 前端     | React 19 + TypeScript 5.9 + Vite 8                               | 应用外壳、AI 面板、状态管理                      |
+| 表格引擎 | [Univer](https://univer.ai) 1.5.2（Apache-2.0）                  | Canvas 渲染的 Excel 兼容网格、公式引擎、插件体系 |
+| 后端     | Rust 2024 + [Axum](https://github.com/tokio-rs/axum) 0.8 + Tokio | 本地 HTTP API、文件持久化/恢复、官方插件运行时   |
+| 桌面     | [Tauri 2](https://tauri.app)                                     | 复用系统 WebView，Rust 侧内嵌后端 sidecar        |
+| 工程     | pnpm workspace + Cargo workspace                                 | 前后端同仓、独立依赖与构建                       |
+| CI       | GitHub Actions                                                   | 前端 lint/test/build + Rust fmt/clippy/test      |
 
 更完整的选型对比与理由见 [docs/architecture/tech-stack.md](docs/architecture/tech-stack.md)。
 
 > **工程原则**：性能、简洁、模块独立是本项目的硬约束，含可度量的性能预算与模块依赖规则，见 [docs/architecture/principles.md](docs/architecture/principles.md)。
-> 说明：当前 Univer 方案在“初始 JS / 内存占用”上明显超出预算，正在通过 spike 评估「自研轻量网格 + Rust/WASM 公式内核」替代，详见该文档 §6。
+> 说明：已决定保留 Univer（Excel 级体验优先，2026-11-21）；性能预算将在前端设计阶段按该路线校准，优化项见 principles.md §6。后端决策与设计见 [docs/architecture/backend.md](docs/architecture/backend.md)。
 
 ## 快速开始
 
@@ -113,6 +113,7 @@ open-calculator/
 ## 文档
 
 - [工程原则与性能预算](docs/architecture/principles.md)
+- [后端架构设计](docs/architecture/backend.md)
 - [架构总览](docs/architecture/overview.md)
 - [技术选型与对比](docs/architecture/tech-stack.md)
 - [路线图](docs/roadmap.md)

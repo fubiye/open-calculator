@@ -21,19 +21,20 @@
 - [x] release 构建启用 LTO + strip（后端二进制 3.2MB → 2.0MB）
 - [x] 基线测量：前端 1.72MB JS(gzip) / 42MB Heap；后端 2.0MB / 6.8MB RSS / 6.5ms 启动
 - [x] 工程原则、性能预算、模块地图与接口规则文档化
-- [ ] 快照版本信封（schemaVersion/engine/data）+ `expectedRevision` 冲突控制
-- [ ] 拆分 `crates/core` / `crates/storage`，瘦身 `crates/server`
-- [ ] 前端抽出 `SpreadsheetView` 接口（Univer 为第一个实现）
-- [ ] 表格引擎 spike（3–5 天时间盒）：自研 Canvas 网格 + Rust 公式内核 WASM
-- [ ] 若 spike 不达标，回退方案 A：保留 Univer，重设预算并开启 Worker/按需加载
+- [x] 后端架构设计定稿：分层/crate 边界、文件持久化与崩溃恢复、插件系统、本地文件数据源（ADR-0007~0010）
+- [ ] 后端实现：core/storage/server 拆分 + data-core/plugin-api/plugin-host；快照信封 + `expectedRevision` CAS
+- [ ] 文件级持久化与崩溃恢复（原子写 + 检查点 + 数据快照缓存）
+- [ ] 官方插件：CSV/JSON 数据源 + 公式函数插件（金融/文本），配置开关启用
+- [ ] Univer 路线性能优化（Worker 公式计算、按需插件、locale 裁剪、面板懒加载），按实测校准前端预算
 - [ ] `criterion` 基准 + bundle 体积门禁接入 CI
 
-**验收**：性能数据可复现；模块依赖方向符合 principles.md §4；表格引擎路线有数据支撑的决策记录（ADR）。
+**验收**：性能数据可复现；模块依赖方向符合 principles.md §4；后端决策记录（ADR-0007~0010）已定稿并作为实现依据；前端设计待讨论。
 
 ## 阶段 1：可用（v0.2.0）
 
-- [ ] SQLite 持久化（`sqlx`），工作簿列表 / 新建 / 重命名 / 删除
-- [ ] 快照版本号与损坏校验；启动时恢复上次工作簿
+- [ ] 文件级持久化与崩溃恢复（原子写 + 检查点；SQLite 是否引入待测量）
+- [ ] 本地 CSV/JSON 数据源 + 手动刷新 + 数据快照缓存
+- [ ] 文件列表 / 新建 / 打开 / 保存；多文件后端隔离（session）
 - [ ] 导入 / 导出 `.xlsx`（Rust `umya-spreadsheet` 或 Univer 插件，先定一条权威路径）
 - [ ] Playwright 端到端测试：输入公式、重算、刷新后保留
 - [ ] 打包验证：`tauri build` 在 macOS 产出可运行 `.app`，sidecar 正常启停

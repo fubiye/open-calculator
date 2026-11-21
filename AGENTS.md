@@ -68,10 +68,12 @@ pnpm --dir apps/desktop check
 
 ## 7. 边界（当前阶段明确不做）
 
-- 不引入数据库迁移、认证、云同步、多人协作（阶段 1 才做 SQLite）。
+- v1 不引入 SQLite（文件原子写 + 检查点；测量后再评估）；不做认证、云同步、多人协作。
 - 不提前实现 AI 模型调用；AI 相关只做接口设计与占位（见 `docs/adr/0006-ai-architecture.md`）。
 - 不新增“框架级”抽象（状态管理库、依赖注入、自研渲染器），除非有第二个使用方。
-- 在表格引擎 A/B 决策（见 principles.md §6）确认前，不继续投入 Univer 专属功能。
+- 表格引擎已定为 Univer（Excel 级体验优先）；v1 不做自研网格。
+- v1 后端插件只做官方插件（CSV/JSON 数据源 + 公式函数插件），配置开关启用；不做第三方 WASM、不做原生动态库。
+- 实时计算只在单个文件内传播；不做文件监控/轮询，数据源仅手动刷新。
 - 前端不得直接持有模型 API key；AI 一律经 Rust 后端。
 - 不修改 `apps/desktop/src-tauri/binaries/`、`target/`、`node_modules/` 等生成物。
 
@@ -88,6 +90,7 @@ pnpm --dir apps/desktop check
 
 - [README](README.md)
 - [工程原则与性能预算](docs/architecture/principles.md)
+- [后端架构设计](docs/architecture/backend.md)
 - [架构总览](docs/architecture/overview.md)
 - [技术选型](docs/architecture/tech-stack.md)
 - [ADR](docs/adr/README.md)

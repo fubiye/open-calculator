@@ -2,7 +2,7 @@
 
 - 状态：v0.1.0 骨架
 - 最后更新：2026-11-21
-- 相关文档：[工程原则与性能预算](principles.md) · [技术选型](tech-stack.md) · [ADR](../adr/)
+- 相关文档：[工程原则与性能预算](principles.md) · [后端架构设计](backend.md) · [技术选型](tech-stack.md) · [ADR](../adr/)
 
 ## 1. 产品定位
 
@@ -45,6 +45,8 @@ flowchart LR
 未来新增（不在当前范围）：`crates/calc-engine`（Rust 计算/插件运行时）、`crates/ai`（模型网关）、`packages/sdk`（前端插件 SDK）。
 
 ## 4. 前后端协议
+
+> 后端的完整分层、文件模型、持久化/恢复与插件设计见 [后端架构设计](backend.md)；本节只保留与前端相关的接口摘要。
 
 前后分离，所有交互通过 `http://127.0.0.1:8787/api/v1` 的 JSON API：
 

@@ -55,6 +55,8 @@
 
 ## 3. 性能预算（目标架构）
 
+> 注：前端预算原按自研轻量引擎设定。已决定保留 Univer（2026-11-21，Excel 级体验优先），A 路线实际预算将在前端设计阶段按实测校准；下表数值暂作为产品级下限目标保留。
+
 ### 前端（计算器主界面）
 
 | 指标               | 硬上限（不可回归） | 目标   | 说明                 |
@@ -175,7 +177,7 @@ core    → (无内部依赖)
 | B. 自研轻量网格 + Rust 公式内核（WASM）        | 目标 < 250 KB                  | 目标 < 25 MB | **是**     | 计算器所需的网格/公式/格式，逐步补齐 | 高（网格 2–4 周 + 公式内核 3–6 周，可分阶段） | 前后端共用一套 Rust 公式引擎，消除双引擎口径问题；与“可扩展/WASM 插件”同构 |
 | C. 双模式（精简计算器 + 可选 Univer 表格模式） | 主包 < 300 KB，Univer 按需加载 | 按需         | 部分       | 覆盖最全                             | 最高                                          | 与 P2 简洁冲突，不推荐                                                     |
 
-**建议**：走 B，但先做** 3–5 天时间盒 spike** 验证（自研 Canvas 网格 + Rust 公式内核 WASM 求值 + 基准脚本），用数据决定是否正式切换；在 spike 结论出来前，不继续投入 Univer 专属功能（当前演示已够用）。
+**已决策（2026-11-21）**：保留 Univer（A 方案），理由为「Excel 级体验优先」。代价是接受较高的初始 JS / Heap；前端设计阶段将据此重新校准预算，并执行优化：Worker 公式计算、按需插件组合、locale 裁剪、AI 面板懒加载、内存剖析。B 方案不再推进，保留在文档中作为历史备选。
 
 ## 7. 执行计划
 
@@ -183,16 +185,16 @@ core    → (无内部依赖)
 
 1. 确认本文档与预算数值；
 2. 快照版本信封 + `expectedRevision` 冲突控制（接口先行）；
-3. 拆分 `crates/core`、`crates/storage`、瘦身 `crates/server`（引擎无关，先做）；
-4. 前端抽出 `SpreadsheetView` 接口（Univer 作为首个实现），为引擎决策留出替换点；
+3. 拆分 `crates/core`、`crates/storage`、`crates/data-core`、`crates/plugin-api`、`crates/plugin-host`，瘦身 `crates/server`（见 ADR-0007）；
+4. 前端按后端契约对齐（快照信封、expectedRevision/409 处理）；
 5. 提交基线测量脚本（体积/启动/RSS）到 `scripts/`。
 
 ### P1（1–2 周）
 
-1. 表格引擎 spike（B 方案），产出：初始 JS、Heap、100k 单元格滚动 FPS、输入延迟、公式重算耗时；
-2. `criterion` 基准（formula / storage）；
-3. bundle budget 与 CI 体积门禁；
-4. 根据 spike 数据决定：切换 B 或回退 A 并接受相应预算。
+1. 后端实现：文件持久化/恢复、官方插件（CSV/JSON + 公式函数插件）、快照信封 + CAS；
+2. Univer 路线性能优化（Worker 公式计算、按需插件、locale 裁剪、面板懒加载），并按实测校准前端预算；
+3. `criterion` 基准（storage / 插件函数）；
+4. bundle budget 与 CI 体积门禁。
 
 ### P2（持续）
 
