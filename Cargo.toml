@@ -23,3 +23,10 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 thiserror = "2"
 chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1"
+
+# 本地服务/桌面 sidecar 对启动时间与体积敏感：开启 LTO、单 codegen unit、剥离符号。
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
