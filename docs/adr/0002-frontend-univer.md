@@ -27,7 +27,7 @@
   - 主包较大（当前产物约 7 MB，gzip ≈ 1.75 MB），后续需要按需加载/代码分割/worker 化。
   - Univer 的 Facade API 迭代较快，升级需要回归测试；锁定小版本并记录升级清单。
   - 深度定制（自定义渲染、AI 内联建议）需要理解其插件与渲染层。
-- 切换成本：若未来改用自研或 FortuneSheet，需重写 `apps/web/src/components/Spreadsheet.tsx` 与快照适配层；演示数据、API、外壳不受影响。这也解释为何把 Univer 集成收敛在单一组件内。
+- 切换成本：若未来改用自研或 FortuneSheet，需重写 `frontend/apps/web/src/components/Spreadsheet.tsx` 与快照适配层；演示数据、API、外壳不受影响。这也解释为何把 Univer 集成收敛在单一组件内。
 
 ## 备选方案
 

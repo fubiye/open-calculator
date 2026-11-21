@@ -18,7 +18,7 @@
 | 桌面壳        | Tauri 2.12.7 / CLI 2.12.6                                             | Electron、纯 PWA                                 | 体积小、Rust 侧可复用后端逻辑，sidecar 可打包本地 server（仓库已配 `externalBin`） | 三平台 webview 行为差异；签名/自动更新链路尚未落地                                                  |
 | HTTP 后端     | Axum 0.8.9 + Tokio 1.54.1（均 MIT）                                   | Actix Web 4.20、Poem 3.1                         | 与 tokio/hyper/tower 同栈，中间件生态成熟，学习与维护成本低                        | 当前功能不构成性能瓶颈，性能差异不构成选型理由                                                      |
 | 存储          | 内存 Store → SQLite（sqlx 0.9.1 或 rusqlite 0.43.0）                  | Postgres、嵌入式 KV                              | 单机优先、零运维；`revision` 字段已在 API 中出现，天然适配快照版本化               | 迁移期双写/兼容；SQLite 并发写入需串行化                                                            |
-| 类型共享      | 现阶段手写 TS 接口（`apps/web/src/lib/api.ts`）                       | ts-rs 12、utoipa 6 + openapi-typescript          | 接口少时手写成本最低；后端已用 serde                                               | 手写易漂移；ts-rs 12.0.1 已近 10 个月无新版（待验证），utoipa 6 生态更新                            |
+| 类型共享      | 现阶段手写 TS 接口（`frontend/packages/api-client/src/index.ts`）     | ts-rs 12、utoipa 6 + openapi-typescript          | 接口少时手写成本最低；后端已用 serde                                               | 手写易漂移；ts-rs 12.0.1 已近 10 个月无新版（待验证），utoipa 6 生态更新                            |
 | 交互式计算    | Univer `engine-formula`（前端 TS）                                    | HyperFormula（AGPL）、自研                       | 与表格渲染同一数据模型，零序列化开销，支持 Worker 计算                             | 与 Rust 侧权威计算存在「双引擎口径」问题（第 5 节核心）                                             |
 | 权威/批量计算 | formualizer 0.14.0（MIT OR Apache-2.0）— 先做 spike                   | umya-spreadsheet、calamine、LibreOffice 无头     | 纯 Rust、400+ 函数、增量重算、可注册自定义函数、WASM 友好                          | 0.14 版本迭代极快（月内 0.9→0.14），API 不稳、社区极新                                              |
 | 插件沙箱      | 现在不做；下一步 wasmtime 51（Apache-2.0 WITH LLVM-exception）        | 进程隔离、Deno、JS 沙箱                          | 组件化调用、燃料/超时控制、formualizer 亦支持 wasmtime 插件                        | 集成成本高；WASI 能力边界需自行裁剪                                                                 |
@@ -33,8 +33,8 @@
 
 前端已按 Univer 初始化，不是「待选」状态：
 
-- `apps/web/src/components/Spreadsheet.tsx`：`createUniver` + `UniverSheetsCorePreset`（preset 模式），挂载后创建/恢复 workbook，命令订阅后 800ms 防抖自动保存。
-- `apps/web/package.json`（锁定精确版本）：`@univerjs/presets@1.5.2`、`@univerjs/preset-sheets-core@1.5.2`。
+- `frontend/packages/workbook-univer/src/SpreadsheetHost.tsx`：`createUniver` + `UniverSheetsCorePreset`（preset 模式），挂载后创建/恢复 workbook，命令订阅后 800ms 防抖自动保存。
+- `frontend/packages/workbook-univer/package.json`（锁定精确版本）：`@univerjs/presets@1.5.2`、`@univerjs/preset-sheets-core@1.5.2`。
 - 依赖事实：两包均为 **Apache-2.0**。npm 最新为 **1.6.0**（2026-11-21 发布），但 pnpm 12 默认 `minimumReleaseAge` 供应链策略拒绝发布不足 24h 的版本，且 1.6.0 尚无可观察的稳定期；因此项目锁定 **1.5.2**（2026-11-16 发布），待 1.6.0 放量后再同步升级全部 `@univerjs/*`。`preset-sheets-core` 的 peer 依赖为 `react ^16.9 || ^17 || ^18 || ^19`、`react-dom` 同、`rxjs >=7`。
 - 官方 README：Univer 视图层基于 React 18，**支持 React 18 与 19**；浏览器基线 Chrome/Edge ≥88、Firefox ≥90、Safari ≥14.1；依赖 `Intl.Segmenter`（不支持时需 polyfill）。
 - 文档站当前标注版本 **v1.5.2**，与项目锁定版本一致（最新包 1.6.0 的文档尚未跟进）。
@@ -85,7 +85,7 @@
 
 ## 3. 桌面壳
 
-事实：`tauri` crate **2.12.7**（2026-11-18，Apache-2.0 OR MIT）、`@tauri-apps/cli` **2.12.6**、`@tauri-apps/api` **2.12.5**；仓库 `apps/desktop/src-tauri/tauri.conf.json` 已启用 `externalBin: ["binaries/open-calculator-server"]` 与 CSP。另注：3.0 已进入 alpha（`tauri 3.0.0-alpha.6`，2026-11-06），2.x 仍是稳定主线，**不提前迁移**。
+事实：`tauri` crate **2.12.7**（2026-11-18，Apache-2.0 OR MIT）、`@tauri-apps/cli` **2.12.6**、`@tauri-apps/api` **2.12.5**；仓库 `frontend/apps/desktop/src-tauri/tauri.conf.json` 已启用 `externalBin: ["binaries/open-calculator-server"]` 与 CSP。另注：3.0 已进入 alpha（`tauri 3.0.0-alpha.6`，2026-11-06），2.x 仍是稳定主线，**不提前迁移**。
 
 | 维度     | Tauri 2（选择）                                                                             | Electron                       | PWA              |
 | -------- | ------------------------------------------------------------------------------------------- | ------------------------------ | ---------------- |
@@ -96,13 +96,13 @@
 | 自动更新 | 官方 updater 插件（要求签名密钥对；静态 JSON 或动态更新服务器；插件文档要求 Rust ≥1.90）    | electron-updater 生态成熟      | 浏览器自动更新   |
 | 签名分发 | macOS 需 codesign + notarization，Windows 需 Authenticode                                   | 同左，工具链更成熟             | 无               |
 
-**决策**：Tauri 2。理由不是「更轻」，而是「后端是 Rust」——主进程、sidecar、`crates/server` 三点可以共享类型与逻辑（当前 desktop 通过 sidecar 跑 server，未来可选进程内集成）。
+**决策**：Tauri 2。理由不是「更轻」，而是「后端是 Rust」——主进程、sidecar、`backend/crates/server` 三点可以共享类型与逻辑（当前 desktop 通过 sidecar 跑 server，未来可选进程内集成）。
 
 **已知差异与待验证**：
 
 - macOS WKWebView 对 Canvas/字体/`Intl` 的行为与 Chromium 不同；Univer 是 Canvas 渲染，**必须在 WKWebView 实测滚动与编辑延迟**（spike）。
 - Linux WebKitGTK 版本碎片化，可能成为支持矩阵短板。
-- sidecar 二进制需按 `-$TARGET_TRIPLE` 命名（官方 sidecar 文档）；仓库已有 `apps/desktop/scripts/build-sidecar.sh`（`build:sidecar`），三平台 triple 与 CI 产物待补。
+- sidecar 二进制需按 `-$TARGET_TRIPLE` 命名（官方 sidecar 文档）；仓库已有 `frontend/apps/desktop/scripts/build-sidecar.sh`（`build:sidecar`），三平台 triple 与 CI 产物待补。
 - 自动更新与签名**现在不做**：需要密钥管理、更新服务器、公证账号，属于发布阶段工作。
 
 ---
@@ -117,7 +117,7 @@
 | Actix Web | 4.20.0 | 2026-11-17 | MIT OR Apache-2.0 | 性能标杆，但独立 actor 运行时与项目其余栈不一致，收益不成立                                                         |
 | Poem      | 3.1.12 | 2025-07-28 | MIT OR Apache-2.0 | 生态与更新频率弱于前两者                                                                                            |
 
-当前仓库事实：`crates/server` 已有 `config/routes/store/app/error` 与 `tests/api.rs`，依赖 `axum 0.8.9`、`tokio 1.54`、`tower-http 0.6`、`thiserror 2`。
+当前仓库事实：`backend/crates/server` 已有 `config/routes/store/app/error` 与 `tests/api.rs`，依赖 `axum 0.8.9`、`tokio 1.54`、`tower-http 0.6`、`thiserror 2`。
 
 值得记录的小项：
 
@@ -322,14 +322,14 @@ POST /api/v1/ai/chat  (SSE)
 
 | #   | 风险                                                                          | 影响            | 验证方式（spike）                                                                                                                                | 完成判据                                |
 | --- | ----------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
-| S1  | Univer 在 macOS WKWebView（Tauri）中滚动/编辑性能与 Chromium 差异             | 桌面端体验      | 在 `apps/desktop` 打包后跑 1 万行 × 30 列工作表，记录 FPS 与输入延迟                                                                             | 输入到渲染 < 50ms，滚动无明显掉帧       |
+| S1  | Univer 在 macOS WKWebView（Tauri）中滚动/编辑性能与 Chromium 差异             | 桌面端体验      | 在 `frontend/apps/desktop` 打包后跑 1 万行 × 30 列工作表，记录 FPS 与输入延迟                                                                    | 输入到渲染 < 50ms，滚动无明显掉帧       |
 | S2  | Univer 版本升级破坏（1.6.0 刚发布即被供应链策略拒绝、`@univerjs/*` 需同版本） | 构建/运行时错误 | 锁定精确版本，写升级脚本 + 冒烟测试清单                                                                                                          | 升级流程可重复，冒烟全绿                |
 | S3  | 双引擎口径差异（Univer vs formualizer）                                       | 数值不可信      | 20–50 条 golden fixtures（SUM/IF/VLOOKUP/日期/错误值/动态数组）两端对拍                                                                          | 差异项有明确归类（支持/不支持/精度）    |
 | S4  | formualizer 0.14 API 不稳                                                     | 返工            | 单独 crate + trait 隔离，只做一个「读 xlsx → 重算 → 导出值」最小闭环                                                                             | 一周内可替换实现而不动业务层            |
 | S5  | 前端 bundle 体积（Univer + locale + CSS）                                     | 首屏            | 当前实测：主 JS 6.9 MB（gzip 1.66 MB），`dist` 共 43 MB / 157 文件（含 locale chunk 与 sourcemap）；再用 `rollup-plugin-visualizer` 拆解，定预算 | 主 chunk 预算明确，超限有构建告警       |
 | S6  | 异步自定义函数阻塞重算                                                        | 卡顿/超时雪崩   | 用假接口（延迟 500ms/3s/超时）验证 `AsyncObject` 行为与降级                                                                                      | 超时不出异常穿透，UI 可继续编辑         |
 | S7  | AI 工具调用误写单元格                                                         | 数据损坏        | 所有写操作走「确认 + 服务端校验 + revision 冲突检测」                                                                                            | 冲突/越界/超限均被拒绝且有可读错误      |
-| S8  | sidecar 跨平台打包（`-$TARGET_TRIPLE`、CSP、端口）                            | 发布            | 已有 `apps/desktop/scripts/build-sidecar.sh` 与 `build:sidecar` 脚本；补三平台 triple 与 CI 产物                                                 | 三平台双击可启动，前端能连上本地 server |
+| S8  | sidecar 跨平台打包（`-$TARGET_TRIPLE`、CSP、端口）                            | 发布            | 已有 `frontend/apps/desktop/scripts/build-sidecar.sh` 与 `build:sidecar` 脚本；补三平台 triple 与 CI 产物                                        | 三平台双击可启动，前端能连上本地 server |
 | S9  | 后端存储从内存迁移 SQLite 的并发写                                            | 数据丢失        | 并发 PUT 同一 workbook 的测试（revision CAS）                                                                                                    | 冲突返回 409，无静默覆盖                |
 
 ---

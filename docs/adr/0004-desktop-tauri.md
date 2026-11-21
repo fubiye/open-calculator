@@ -9,7 +9,7 @@
 
 ## 决策
 
-- 桌面壳：**Tauri 2.12**，前端复用 `apps/web` 的构建产物（`frontendDist = ../../web/dist`）。
+- 桌面壳：**Tauri 2.12**，前端复用 `frontend/apps/web` 的构建产物（`frontendDist = ../../web/dist`）。
 - 开发：`devUrl = http://localhost:5173`；根目录 `pnpm dev` 同时启动 Web 与后端，桌面端直接加载 dev server（Vite proxy 处理 `/api`）。
 - 发布：后端 release 二进制作为 **sidecar** 打包（`externalBin`），应用启动时由 Rust 侧 spawn，退出时 kill；前端通过 `VITE_API_BASE_URL=http://127.0.0.1:8787` 访问。
 - 环境：macOS 使用系统 WKWebView；Windows 使用 WebView2；Linux 使用 WebKitGTK。

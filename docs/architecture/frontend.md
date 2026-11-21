@@ -1,5 +1,7 @@
 # 前端架构设计（Frontend Design）
 
+> 本文中的前端包路径均相对 `frontend/`（例如 `apps/web` 即 `frontend/apps/web`，`packages/*` 即 `frontend/packages/*`）。
+
 - 状态：**v0.1 设计稿（2026-11-21）**，对应决策已确认，**尚未实现**
 - 本文覆盖前端框架、包拆分、边界强制、扩展体系、文件交互、视图组合、响应式数据、公式函数桥接与性能预算
 - 相关决策：[ADR-0002 前端与 Univer](../adr/0002-frontend-univer.md) · [ADR-0011 包拆分与边界](../adr/0011-frontend-packages-boundaries.md) · [ADR-0012 前端扩展体系](../adr/0012-frontend-extension-system.md) · [后端设计](backend.md)

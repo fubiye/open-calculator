@@ -35,12 +35,12 @@ flowchart LR
 
 ## 3. 代码组成
 
-| 目录            | 职责                                                               | 关键依赖                       |
-| --------------- | ------------------------------------------------------------------ | ------------------------------ |
-| `apps/web`      | 应用外壳、表格界面、AI 面板、API 客户端                            | React 19、Vite 8、Univer 1.5.2 |
-| `crates/server` | 本地 HTTP API、工作簿快照存储（当前内存）、CORS、tracing、优雅关闭 | Axum 0.8、Tokio、tower-http    |
-| `apps/desktop`  | 桌面打包；dev 复用 Vite dev server，release 内嵌后端二进制         | Tauri 2、tauri-plugin-shell    |
-| `docs`          | 架构、选型、ADR、路线图                                            | -                              |
+| 目录                    | 职责                                                               | 关键依赖                       |
+| ----------------------- | ------------------------------------------------------------------ | ------------------------------ |
+| `frontend/apps/web`     | 应用外壳、表格界面、AI 面板、API 客户端                            | React 19、Vite 8、Univer 1.5.2 |
+| `backend/crates/server` | 本地 HTTP API、工作簿快照存储（当前内存）、CORS、tracing、优雅关闭 | Axum 0.8、Tokio、tower-http    |
+| `frontend/apps/desktop` | 桌面打包；dev 复用 Vite dev server，release 内嵌后端二进制         | Tauri 2、tauri-plugin-shell    |
+| `docs`                  | 架构、选型、ADR、路线图                                            | -                              |
 
 未来新增（不在当前范围）：`crates/calc-engine`（Rust 计算/插件运行时）、`crates/ai`（模型网关）、`packages/sdk`（前端插件 SDK）。
 
@@ -133,11 +133,11 @@ MVP 顺序：解释公式 → 生成公式 → 基于选区写值 → 生成整�
 
 ## 9. 部署形态
 
-| 形态               | 前端                 | 后端                       | 备注                |
-| ------------------ | -------------------- | -------------------------- | ------------------- |
-| 浏览器 + 本地服务  | Vite dev / 静态托管  | `open-calculator-server`   | 开发与自托管        |
-| 桌面（Tauri）      | 内嵌 `apps/web/dist` | 打包为 sidecar，随应用启动 | macOS/Windows/Linux |
-| 单机可执行（规划） | 静态资源内嵌         | 同一进程提供静态文件 + API | 降低部署门槛        |
+| 形态               | 前端                          | 后端                       | 备注                |
+| ------------------ | ----------------------------- | -------------------------- | ------------------- |
+| 浏览器 + 本地服务  | Vite dev / 静态托管           | `open-calculator-server`   | 开发与自托管        |
+| 桌面（Tauri）      | 内嵌 `frontend/apps/web/dist` | 打包为 sidecar，随应用启动 | macOS/Windows/Linux |
+| 单机可执行（规划） | 静态资源内嵌                  | 同一进程提供静态文件 + API | 降低部署门槛        |
 
 ## 10. 质量与工程基线
 

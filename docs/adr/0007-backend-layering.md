@@ -1,5 +1,7 @@
 # ADR-0007：后端分层与 crate 边界
 
+> 本文中的 crate 路径均相对 `backend/`。
+
 - 状态：已接受（方向与边界已定；具体 crate 清单可在开工前微调）
 - 日期：2026-11-21
 - 关联：[ADR-0003](0003-rust-backend.md) · [工程原则](../architecture/principles.md) · [后端设计](../architecture/backend.md)

@@ -9,7 +9,7 @@
 
 ## 决策
 
-- **AI 调用统一放 Rust 后端**（未来 `crates/ai` 或 `crates/server` 的 `ai` 模块）：
+- **AI 调用统一放 Rust 后端**（未来 `crates/ai` 或 `backend/crates/server` 的 `ai` 模块）：
   - Provider 抽象：`ChatProvider` trait，首批支持 OpenAI 兼容协议（OpenAI / DeepSeek / OpenRouter 等）与 Ollama；Anthropic 适配器随后。
   - 流式：后端以 SSE 向前端推送 token 与工具调用事件（`/api/v1/ai/chat`）。
   - 密钥：只从后端环境变量 / 系统钥匙串读取，绝不进入浏览器。

@@ -1,5 +1,7 @@
 # ADR-0011：前端包拆分与边界强制
 
+> 本文中的包路径均相对 `frontend/`。
+
 - 状态：已接受（2026-11-21；实现待开工）
 - 相关：[ADR-0002](0002-frontend-univer.md) · [ADR-0012](0012-frontend-extension-system.md) · [前端设计](../architecture/frontend.md) · [工程原则](../architecture/principles.md)
 

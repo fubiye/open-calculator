@@ -9,17 +9,18 @@
 
 ## 决策
 
-- 仓库根同时声明 JS workspace（`pnpm-workspace.yaml`）与 Cargo workspace（根 `Cargo.toml`）。
-- `apps/*` 为可运行应用：`apps/web`（React + Vite）、`apps/desktop`（Tauri）。
-- `crates/*` 为 Rust 库/二进制：当前只有 `crates/server`；Tauri 的 `src-tauri` 被 exclude 出根 workspace，避免与桌面构建的 profile/feature 冲突。
-- 桌面端作为独立 npm package（私有），复用根目录的 `@tauri-apps/cli`。
-- CI 分 Web / Rust 两个 job，各自缓存依赖。
+- 仓库根按**前后端分区**：`frontend/`（前端区域）与 `backend/`（后端区域），根目录只保留文档、CI 与编排脚本。
+- `frontend/` 是独立的 pnpm workspace：`apps/web`（React + Vite）、`apps/desktop`（Tauri）、`packages/*`（可独立测试的前端包）；工具链配置（`package.json`、`pnpm-workspace.yaml`、`pnpm-lock.yaml`、`eslint.config.js`、`tsconfig.base.json`）都在 `frontend/`。
+- `backend/` 是独立的 Cargo workspace：`crates/server`（当前），后续 `core/storage/data-core/plugin-*`；`Cargo.toml`、`Cargo.lock`、`rust-toolchain.toml`、`rustfmt.toml` 都在 `backend/`。
+- Tauri 的 `src-tauri` 位于 `frontend/apps/desktop`，被 exclude 出 backend workspace，避免与桌面构建的 profile/feature 冲突。
+- 根目录 `scripts/`（`dev.sh`、`build.sh`、`check.sh`、`build-desktop.sh`）负责跨端编排，不承载实现代码。
+- CI 分 Frontend / Backend 两个 job，各自以子目录为 working-directory 与缓存路径。
 
 ## 后果
 
-- 优点：一次 PR 可同时修改前后端契约；依赖与脚本集中管理；文档与版本同仓。
-- 成本：根目录工具链更复杂（需要 Node + Rust）；前端依赖安装体积较大（Univer 依赖树）。
-- 约束：新增 Rust crate 必须加入根 `members`；新增前端包必须放在 `apps/` 下并被 pnpm workspace 覆盖。
+- 优点：前后端目录、依赖、锁文件与构建入口完全分离；各自的命令不会互相污染；一次 PR 仍可同时修改前后端契约。
+- 成本：需要 Node + Rust 两套工具链；跨端操作必须通过根级脚本或显式 `cd`。
+- 约束：新增 Rust crate 必须加入 `backend/Cargo.toml` 的 `members`；新增前端包必须放在 `frontend/apps` 或 `frontend/packages` 并被 `frontend/pnpm-workspace.yaml` 覆盖。
 
 ## 备选方案
 

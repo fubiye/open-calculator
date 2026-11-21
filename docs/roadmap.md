@@ -12,7 +12,7 @@
 - [x] Tauri 2 桌面壳骨架（dev + release sidecar 方案）
 - [x] AI 面板占位与后端能力开关
 
-**验收**：`pnpm dev` 后编辑表格 → 公式重算 → 刷新页面数据仍在（后端未重启时）；`pnpm lint && pnpm test` 通过。
+**验收**：`./scripts/dev.sh` 后编辑表格 → 公式重算 → 刷新页面数据仍在（后端未重启时）；`./scripts/check.sh` 通过。
 
 ## 阶段 0.5：性能与模块化基线（进行中）
 
